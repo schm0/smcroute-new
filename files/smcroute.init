@@ -1,0 +1,42 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2010 OpenWrt.org
+START=55
+
+SMCROUTE=/usr/sbin/smcrouted
+CONFIG=/etc/smcroute.conf
+RUNAS=nobody:nogroup
+PIDFILE=/var/run/smcroute.pid
+
+start() {
+
+	if [ -f "$PIDFILE" ] && kill -0 $(cat "$PIDFILE"); then
+	
+		echo 'smcroute already running' >&2
+		
+		return 1
+	fi	
+		echo 'Starting smcroute...' >&2
+		
+		if $SMCROUTE -f $CONFIG -P $PIDFILE -p $RUNAS -N; then
+			echo 'smcroute started' >&2
+		else
+			echo 'Starting smcroute failed' >&2
+		fi
+		
+}
+
+stop() {
+
+	if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+	
+		echo 'smcroute not running' >&2
+		
+		return 1
+	fi
+	
+		echo 'Stopping smcroute...' >&2
+		
+		kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+		
+		echo 'smcroute stopped' >&2
+}
