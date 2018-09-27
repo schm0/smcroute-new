@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=smcroute-new
-PKG_VERSION:=2.4.0
+PKG_VERSION:=2.4.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/troglobit/smcroute.git
-PKG_SOURCE_VERSION:=9ed7bb26484f72221dfacfac79421fd278887fb9
+PKG_SOURCE_VERSION:=df92ba510eaa521c75e0cf20d7c2269724a8fd94
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 
 PKG_LICENSE:=GPL-2.0+
@@ -74,15 +74,15 @@ CONFIGURE_ARGS += \
 
 
 define Package/smcroute-new/conffiles
-/etc/smcroute.conf
+/etc/smcroute/smcroute.conf
 endef
 
 
 define Package/smcroute-new/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DIR) $(1)/etc/smcroute
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/smcroute.conf $(1)/etc/smcroute.conf
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/smcroute.conf $(1)/etc/smcroute/smcroute.conf
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/smcrouted $(1)/usr/sbin/
 	$(INSTALL_BIN) ./files/smcroute.init $(1)/etc/init.d/smcroute
 

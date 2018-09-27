@@ -3,11 +3,13 @@
 START=55
 
 SMCROUTE=/usr/sbin/smcrouted
-CONFIG=/etc/smcroute.conf
-RUNAS=nobody:nogroup
+CONFIG=/etc/smcroute/smcroute.conf
 PIDFILE=/var/run/smcroute.pid
+SOCKFILE=/var/run/smcroute.sock
+RUNAS=nobody:nogroup
 
-start() {
+start() 
+{
 
 	if [ -f "$PIDFILE" ] && kill -0 $(cat "$PIDFILE"); then
 	
@@ -17,6 +19,8 @@ start() {
 	fi	
 		echo 'Starting smcroute...' >&2
 		
+		rm -f "$PIDFILE" && rm -f "$SOCKFILE" > /dev/null
+		
 		if $SMCROUTE -f $CONFIG -P $PIDFILE -p $RUNAS -N; then
 			echo 'smcroute started' >&2
 		else
@@ -25,7 +29,8 @@ start() {
 		
 }
 
-stop() {
+stop() 
+{
 
 	if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
 	
@@ -36,7 +41,7 @@ stop() {
 	
 		echo 'Stopping smcroute...' >&2
 		
-		kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+		kill -15 $(cat "$PIDFILE") &&  rm -f "$PIDFILE" && rm -f "$SOCKFILE"
 		
 		echo 'smcroute stopped' >&2
 }
